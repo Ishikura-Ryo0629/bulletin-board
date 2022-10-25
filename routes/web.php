@@ -1,4 +1,9 @@
 <?php
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\PrefectureController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\AnimationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +16,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => ['auth']], function(){
+    Route::get('/', 'ThreadController@index');
+    Route::get('/threads/create', 'ThreadController@create');
+    Route::get('/threads/{thread}', 'ThreadController@show');
+    Route::post('/threads/create', 'ThreadController@store');
+    Route::post('/threads/{thread}', 'CommentController@store');
+    
+    Route::get('/threads/{thread}/favorite', 'FavoriteController@store');
+    Route::get('threads/{thread}/unfavorite', 'FavoriteController@destroy');
+    Route::get('/threads/prefecture', 'PrefectureController@index');
 });
+
+Auth::routes();
